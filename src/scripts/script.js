@@ -25,6 +25,8 @@ class Task {
         let tasks = Task.instances
         tasks[task].is_complete = true
         tasks_view()
+        document.getElementById(`edit-button-${task}`).disabled = true
+        
     }
     static edit(task){
         const taskCell = document.getElementById(`task-title-${task}`);
@@ -36,17 +38,24 @@ class Task {
                 <button type="submit" class="btn btn-warning ms-1"
                 onclick="Task.ok_edit(${task})">Ok!</button>
             </td>`;
+            document.getElementById(`finish-button-${task}`).disabled = true
+            document.getElementById(`delete-button-${task}`).disabled = true
+            document.getElementById("create-button").disabled = true
     }
     static ok_edit(task){
         let new_title = document.getElementById(`second-title-${task}`).value
         let tasks = Task.instances
         tasks[task].title = new_title
+        document.querySelectorAll("btn").forEach((button) => {
+            button.disabled = false
+        });
+        document.getElementById("create-button").disabled = false
         tasks_view()
     }
 }
 
 
-let tasks_view =() =>{
+let tasks_view = () =>{
     let tasks = Task.get_all_instances()
     const container = document.getElementById('container')
     container.innerHTML= `<thead>
@@ -71,13 +80,13 @@ let tasks_view =() =>{
                                         
                                         
                                         <td>
-                                            <button  type="submit" class="btn btn-danger" onclick="Task.delete(${task})"> delete </button>
+                                            <button  type="submit" class="btn btn-danger" id ="delete-button-${task}" onclick="Task.delete(${task})"> delete </button>
                                         </td>
                                         <td>
-                                            <button type="submit" class="btn btn-success ms-1" onclick="Task.finished(${task})">Finished</button>
+                                            <button type="submit" class="btn btn-success ms-1" id ="finish-button-${task}" onclick="Task.finished(${task})">Finished</button>
                                         </td>
                                         <td>
-                                            <button type="submit" class="btn btn-warning ms-1" id ="edit-button-${task}"onclick="Task.edit(${task})">Edit</button>
+                                            <button type="submit" class="btn btn-warning ms-1" id ="edit-button-${task}" onclick="Task.edit(${task})">Edit</button>
                                         </td>
                                         
                                     </tr>
